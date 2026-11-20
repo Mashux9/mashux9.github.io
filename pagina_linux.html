@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conoce Linux</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* 1. Reseteo básico para limpiar márgenes predeterminados */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Desplazamiento suave al pulsar los enlaces del menú */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 2. Estilos generales de la página (fondo y fuente) */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1d5f8e;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        /* 3. Botón de menú: fijo en la esquina para que siempre esté visible */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 20;
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .menu-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .menu-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Menú desplegable, oculto por defecto */
+        .menu {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 20;
+            background: whitesmoke;
+            border-radius: 8px;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 240px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu.abierto {
+            display: flex;
+        }
+
+        .menu a {
+            color: #1e293b;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            transition: background-color 0.15s ease;
+        }
+
+        .menu a:hover {
+            background-color: #e2e8f0;
+        }
+
+        /* 4. Portada: ocupa toda la pantalla y centra el mensaje */
+        .hero {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image:
+                linear-gradient(rgba(29, 95, 142, 0.7), rgba(29, 95, 142, 0.7)),
+                url('Doodles.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .central-message {
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .central-message h1 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.5rem;
+            font-weight: 400;
+            line-height: 1.5;
+            letter-spacing: 0;
+            color: white;
+        }
+
+        .central-message p {
+            font-size: 1.2rem;
+            color: white;
+            margin-top: 12px;
+            opacity: 0.9;
+        }
+
+        /* 5. Secciones de contenido */
+        .seccion {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            background-color: white;
+        }
+
+        .seccion:nth-of-type(even) {
+            background-color: #f1f5f9;
+        }
+
+        .seccion h2 {
+            font-size: 2rem;
+            color: #1d5f8e;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .seccion h3 {
+            font-size: 1.3rem;
+            color: #1e293b;
+            margin: 24px 0 8px;
+            font-weight: 600;
+        }
+
+        .seccion p {
+            margin-bottom: 14px;
+            color: #334155;
+        }
+
+        .seccion ul {
+            margin: 10px 0 14px 24px;
+            color: #334155;
+        }
+
+        .seccion li {
+            margin-bottom: 6px;
+        }
+
+        /* 6. Pie de página */
+        footer {
+            background-color: #163f5e;
+            color: white;
+            text-align: center;
+            padding: 24px;
+            font-size: 0.95rem;
+        }
+
+        /* Adaptación para pantallas pequeñas */
+        @media (max-width: 600px) {
+            .central-message h1 {
+                font-size: 1.1rem;
+            }
+
+            .seccion h2 {
+                font-size: 1.6rem;
+            }
+
+            .seccion {
+                padding: 40px 18px;
+            }
+        }
+
+        /* 7. Sección de recomendación de distribución */
+        .nivel-botones {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 20px 0;
+        }
+
+        .nivel-btn {
+        background-color: white;
+        color: #1d5f8e;
+        border: 2px solid #1d5f8e;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .nivel-btn:hover,
+        .nivel-btn[aria-pressed="true"] {
+        background-color: #1d5f8e;
+        color: white;
+        }
+
+        .resultado {
+        margin-top: 24px;
+        padding: 24px;
+        border-radius: 8px;
+        background-color: #e0f2fe;
+        border-left: 6px solid #1d5f8e;
+        }
+
+        .resultado h3 {
+        margin-top: 0;
+        }
+
+        .descargar {
+        display: inline-block;
+        margin-top: 12px;
+        background-color: #2563eb;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        }
+
+        .descargar:hover {
+        background-color: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botón de menú fijo en la esquina -->
+    <button class="menu-btn" aria-label="Menú de navegación">☰ Menú</button>
+
+    <!-- Menú desplegable con enlaces a las secciones -->
+    <nav class="menu" id="menu">
+        <a href="#que-es">¿Qué es Linux?</a>
+        <a href="#historia">Historia</a>
+        <a href="#funcionamiento">Funcionamiento</a>
+        <a href="#distribuciones">Distribuciones</a>
+        <a href="#escritorios">Entornos de escritorio</a>
+        <a href="#recomendacion">¿Qué Linux versión me conviene?</a>
+    </nav>
+
+    <!-- Portada -->
+    <header class="hero">
+        <div class="central-message">
+            <h1>Linux - Todo lo que necesitas saber</h1>
+            <p>- Aquí conocerás el mundo del software libre y cómo funciona -</p>
+        </div>
+    </header>
+
+    <!-- Sección 1: ¿Qué es Linux? -->
+    <section class="seccion" id="que-es">
+        <h2>¿Qué es Linux?</h2>
+        <p>Linux es un sistema operativo libre y de código abierto. Al igual que Windows o macOS, su trabajo principal es administrar el procesador, la memoria y los archivos de tu computadora.</p>
+        <p>El núcleo o Kernel de Linux, es el que se encarga de administrar todos los componentes del equipo junto con un conjunto de paquetes de software que conforman el resto del SO (Sistema Operativo). Estos paquetes varían dependiendo de su versión o distribución, ya que al ser un proyecto de código abierto (Open Source) cualquiera puede modificar el sistema y adaptarlo a su gusto o necesidades.</p>
+    </section>
+
+    <!-- Sección 2: Historia -->
+    <section class="seccion" id="historia">
+        <h2>Un poco de historia</h2>
+        <p>La historia comenzó en 1983 cuando Richard Stallman inició el proyecto GNU, con la idea de crear un sistema operativo totalmente libre. Para comienzos de los noventa ya tenían listas casi todas las herramientas, pero les faltaba una pieza fundamental: el núcleo.</p>
+        <p>En 1991, Linus Torvalds, un estudiante de informática en Finlandia, empezó a programar su propio núcleo como un proyecto personal. Al compartir su trabajo en internet, la comunidad unió su núcleo con los programas de GNU, dando vida al sistema GNU/Linux.</p>
+        <p>Gracias a la licencia GPL con la que fue publicado, cualquiera puede descargar, revisar, adaptar y compartir Linux sin tener que pedir permiso a ninguna persona o empresa.</p>
+    </section>
+
+    <!-- Sección 3: Funcionamiento -->
+    <section class="seccion" id="funcionamiento">
+        <h2>¿Cómo funciona por dentro?</h2>
+        <p>Para mantener todo en orden, Linux organiza sus funciones en niveles, cada nivel cumple una tarea específica:</p>
+        <ul>
+            <li><strong>Kernel</strong>: es la base de todo el sistema, se encarga de gestionar todo el hardware.</li>
+            <li><strong>Shell y Terminal</strong>: se encarga de interpretar las órdenes, instrucciones y configuraciones.</li>
+            <li><strong>Aplicaciones</strong>: aquí es donde se ejecutan todos los programas. Esto incluye, los navegadores web, reproductores de música, la interfaz del sistema y el resto de programas que usas a diario.</li>
+        </ul>
+
+        <h3>Organización de archivos y jerarquía del sistema</h3>
+        <p>En Linux, la estructura de información se organiza a partir de un único punto de origen llamado directorio raíz, representado por una barra diagonal <b>(/)</b>. A diferencia de otros sistemas que asignan letras como C o D a diferentes discos, aquí todo el contenido y los dispositivos conectados se integran dentro de una misma estructura de carpetas. Por ejemplo, la carpeta <b>(/home)</b>  resguarda los documentos personales de los usuarios, <b>(/etc)</b>  almacena los archivos de configuración y <b>(/usr)</b>  guarda las aplicaciones instaladas.</p>
+
+        <h3>Gestión de usuarios y niveles de acceso</h3>
+        <p>El funcionamiento del sistema garantiza la seguridad separando el trabajo de cada usuario y restringiendo las modificaciones no autorizadas. Cada archivo o carpeta cuenta con reglas específicas que definen quién puede leer, modificar o ejecutar su contenido. Los usuarios convencionales trabajan en su propia área personal sin poder alterar los archivos centrales del sistema, mientras que las tareas de mantenimiento y administración requieren solicitar permisos especiales mediante la herramienta sudo.</p>
+    </section>
+
+    <!-- Sección 4: Distribuciones -->
+    <section class="seccion" id="distribuciones">
+        <h2>Distribuciones populares y características principales</h2>
+        <p>Cada distribución integra el núcleo (Kernel) de Linux junto con un conjunto de utilidades, herramientas de gestión y paquetes orientados a necesidades específicas enfocadas al rendimiento o flujo de trabajo:</p>
+        <ul>
+            <li><strong>Ubuntu</strong>: destaca por su facilidad de instalación, amplia compatibilidad de hardware y un extenso catálogo de programas listos para usar sin configuraciones complejas.</li>
+            <li><strong>Debian</strong>: uno de los más antiguos, desarrollado por miles de personas de forma voluntaria. Ha servido como una base sólida para servidores, sistemas críticos y otras distribuciones.</li>
+            <li><strong>Fedora</strong>: integra de manera continua las versiones más recientes de software y kernels, priorizando la innovación tecnológica y herramientas para desarrolladores.</li>
+            <li><strong>Arch Linux</strong>: ofrece una base mínima desde la cual tú construyes y configuras el sistema operativo a tu medida. Sigue la filosofía KISS (Keep It Simple, Stupid) - "Mantenlo simple, estúpido".</li>
+            <li><strong>Linux Mint</strong>: incluye una interfaz tradicional con menús tipo ventanas (Estilo Windows) y herramientas de configuración pensadas para un trabajo de escritorio fluido y de fácil uso.</li>
+        </ul>
+    </section>
+    
+    <!-- Sección 5: Entornos de escritorio -->
+    <section class="seccion" id="escritorios">
+        <h2>Entornos de escritorio</h2>
+        <p>El entorno de escritorio es la cara visible del sistema, es decir, el diseño de las ventanas, los menús de inicio y las barras de tareas. La ventaja de Linux es que puedes cambiar esta apariencia sin alterar el funcionamiento interno de tus programas:</p>
+        <ul>
+            <li><strong>GNOME</strong>: un diseño limpio, moderno y libre de distracciones visuales.</li>
+            <li><strong>KDE Plasma</strong>: altamente personalizable, permite cambiar casi cualquier detalle estético.</li>
+            <li><strong>Xfce</strong>: muy ligero y rápido, pensado para revivir computadoras antiguas.</li>
+            <li><strong>Cinnamon</strong>: fácil de usar, intuitivo y con un aire tradicional muy accesible.</li>
+            <li><strong>MATE</strong>: conserva el estilo clásico de los escritorios de antes sin consumir muchos recursos.</li>
+            <li><strong>LXQt</strong>: diseñado para funcionar rápido en equipos con muy poca memoria o procesadores modestos.</li>
+        </ul>
+        <p>Nota: En Linux puedes elegir tu entorno favorito al instalar el sistema o incluso probar varios para ver cuál se adapta mejor a tu forma de trabajar.</p>
+    </section>
+
+    <!-- Sección 6: Recomendación de distribución -->
+<section class="seccion" id="recomendacion">
+    <h2>¿Te atreves a probar Linux?</h2>
+    <p>Selecciona tu nivel de experiencia y te recomendaremos una distribución para empezar!!</p>
+
+    <div class="nivel-botones">
+        <button class="nivel-btn" data-nivel="principiante" aria-pressed="false">Cero experiencia</button>
+        <button class="nivel-btn" data-nivel="intermedio" aria-pressed="false">Intermedio</button>
+        <button class="nivel-btn" data-nivel="avanzado" aria-pressed="false">Avanzado</button>
+    </div>
+
+    <div class="resultado" id="resultado" hidden>
+        <h3 id="resultado-titulo"></h3>
+        <p id="resultado-texto"></p>
+        <a id="resultado-enlace" class="descargar" href="#" target="_blank" rel="noopener">Descargar</a>
+    </div>
+</section>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>2026 - Conoce Linux - </p>
+    </footer>
+
+    <script>
+        const boton = document.querySelector('.menu-btn');
+        const menu = document.getElementById('menu');
+
+        // Muestra u oculta el menú al pulsar el botón
+        boton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.toggle('abierto');
+        });
+
+        // Cierra el menú al elegir una sección
+        menu.querySelectorAll('a').forEach((enlace) => {
+            enlace.addEventListener('click', () => {
+                menu.classList.remove('abierto');
+            });
+        });
+
+        // Cierra el menú si se hace clic fuera de él
+        document.addEventListener('click', (e) => {
+            if (!menu.contains(e.target) && !boton.contains(e.target)) {
+                menu.classList.remove('abierto');
+            }
+        });
+        
+        // 6. Recomendaciones según el nivel de experiencia
+        const recomendaciones = {
+        principiante: {
+        nombre: 'Linux Mint',
+        texto: 'Tiene una interfaz parecida a la de Windows y es muy fácil de usar. Es ideal si estás empezando.',
+        url: 'https://linuxmint.com/download.php'
+        },
+        intermedio: {
+        nombre: 'Fedora',
+        texto: 'Incluye software actualizado y herramientas para desarrolladores. Es una buena opción si ya sabes cómo manejar el sistema y quieres aprender más.',
+        url: 'https://fedoraproject.org/kde/download/'
+        },
+        avanzado: {
+        nombre: 'Arch Linux',
+        texto: 'Te permite construir el sistema desde cero, paquete por paquete. Requiere conocimientos técnicos y te da control total.',
+        url: 'https://archlinux.org/download/' 
+        }
+        };
+
+        const botonesNivel = document.querySelectorAll('.nivel-btn');
+        const resultado = document.getElementById('resultado');
+        const resultadoTitulo = document.getElementById('resultado-titulo');
+        const resultadoTexto = document.getElementById('resultado-texto');
+        const resultadoEnlace = document.getElementById('resultado-enlace');
+
+        function mostrarRecomendacion(nivel) {
+        const rec = recomendaciones[nivel];
+
+        resultadoTitulo.textContent = `Te recomendamos ${rec.nombre}`;
+        resultadoTexto.textContent = rec.texto;
+        resultadoEnlace.href = rec.url;
+        resultado.hidden = false;
+
+        botonesNivel.forEach((boton) => {
+        boton.setAttribute('aria-pressed', boton.dataset.nivel === nivel);
+        });
+        }
+
+        botonesNivel.forEach((boton) => {
+        boton.addEventListener('click', () => {
+        mostrarRecomendacion(boton.dataset.nivel);
+        });
+        });
+    </script>
+
+</body>
+</html>
